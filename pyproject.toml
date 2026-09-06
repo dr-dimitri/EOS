@@ -54,7 +54,7 @@ dev = [
     # - pre-commit-hooks
     # - isort
     # - ruff
-    # - mypy (mirrors-mypy) - sync with requirements-dev.txt (if on pypi)
+    # Mypy runs in this development environment, using uv.lock, including from pre-commit.
     # - pymarkdown
     # - commitizen - sync with requirements-dev.txt (if on pypi)
     #
@@ -169,11 +169,14 @@ filterwarnings = [
 
 [tool.mypy]
 mypy_path= "src"
+python_version = "3.13"
 platform = "linux"
 files = ["src", "tests"]
 exclude = "class_soc_calc\\.py$"
 check_untyped_defs = true
 warn_unused_ignores = true
+# Cached Pendulum analysis changes diagnostics between cold and warm runs with mypy 2.3.1.
+incremental = false
 
 [[tool.mypy.overrides]]
 module = "akkudoktoreos.*"
