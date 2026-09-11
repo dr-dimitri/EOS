@@ -21,7 +21,7 @@ class TestSystem:
     def test_prediction_brightsky(self, server_setup_for_class, is_system_test):
         """Test weather prediction by BrightSky."""
         server = server_setup_for_class["server"]
-        eos_dir = server_setup_for_class["eos_dir"]
+        eos_dir = Path(server_setup_for_class["eos_dir"]).resolve()
 
         result = requests.get(f"{server}/v1/config", timeout=2)
         assert result.status_code == HTTPStatus.OK
@@ -30,7 +30,7 @@ class TestSystem:
         config_json = result.json()
         config_folder_path = Path(config_json["general"]["config_folder_path"])
         # Assure we are working in test environment
-        assert str(config_folder_path).startswith(eos_dir)
+        assert config_folder_path.resolve().is_relative_to(eos_dir)
 
         result = requests.put(f"{server}/v1/config/weather/provider", json="BrightSky")
         assert result.status_code == HTTPStatus.OK

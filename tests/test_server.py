@@ -27,7 +27,7 @@ class TestServer:
     def test_server_setup_for_class(self, server_setup_for_class):
         """Ensure server is started."""
         server = server_setup_for_class["server"]
-        eos_dir = server_setup_for_class["eos_dir"]
+        eos_dir = Path(server_setup_for_class["eos_dir"]).resolve()
 
         # Assure server is running
         result = requests.get(f"{server}/v1/health", timeout=2)
@@ -46,10 +46,10 @@ class TestServer:
         data_folder_path = Path(config_json["general"]["data_folder_path"])
         data_ouput_path = Path(config_json["general"]["data_output_path"])
         # Assure we are working in test environment
-        assert str(config_folder_path).startswith(eos_dir)
-        assert str(config_file_path).startswith(eos_dir)
-        assert str(data_folder_path).startswith(eos_dir)
-        assert str(data_ouput_path).startswith(eos_dir)
+        assert config_folder_path.resolve().is_relative_to(eos_dir)
+        assert config_file_path.resolve().is_relative_to(eos_dir)
+        assert data_folder_path.resolve().is_relative_to(eos_dir)
+        assert data_ouput_path.resolve().is_relative_to(eos_dir)
 
 
 class TestServerSettingsValidation:
@@ -258,7 +258,7 @@ class TestServerStartStop:
     def test_server_restart(self, server_setup_for_function, is_system_test):
         """Test server restart."""
         server = server_setup_for_function["server"]
-        eos_dir = server_setup_for_function["eos_dir"]
+        eos_dir = Path(server_setup_for_function["eos_dir"]).resolve()
         timeout = server_setup_for_function["timeout"]
 
         result = requests.get(f"{server}/v1/config")
@@ -274,10 +274,10 @@ class TestServerStartStop:
             "cachefilestore.json"
         )
         # Assure we are working in test environment
-        assert str(config_folder_path).startswith(eos_dir)
-        assert str(config_file_path).startswith(eos_dir)
-        assert str(data_folder_path).startswith(eos_dir)
-        assert str(data_ouput_path).startswith(eos_dir)
+        assert config_folder_path.resolve().is_relative_to(eos_dir)
+        assert config_file_path.resolve().is_relative_to(eos_dir)
+        assert data_folder_path.resolve().is_relative_to(eos_dir)
+        assert data_ouput_path.resolve().is_relative_to(eos_dir)
 
         if is_system_test:
             # Prepare cache entry and get cached data

@@ -571,7 +571,7 @@ def server_base(
     eosdash_server = f"http://{eosdash_host}:{eosdash_port}"
 
     eos_tmp_dir = tempfile.TemporaryDirectory()
-    eos_dir = str(eos_tmp_dir.name)
+    eos_dir = str(Path(eos_tmp_dir.name).resolve())
     eos_general_data_folder_path = str(Path(eos_dir) / "data")
 
     class Starter(ProcessStarter):
